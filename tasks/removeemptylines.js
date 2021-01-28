@@ -37,6 +37,41 @@ module.exports = function (grunt) {
 				return attributes.replace(/^\s*\n/gm, "").replace(/\s+$/,"");
 			});
 
+			var emptySpaceMarkupStr = src.match(/\n*\s*<!--\(remove-empty-space.+\)-->\n*\s*/g);
+
+			if( emptySpaceMarkupStr != null ) {
+				for(var index = 0; index < emptySpaceMarkupStr.length; index++) {
+					var	str       = emptySpaceMarkupStr[index].indexOf('line-break'),
+						tempStr   = emptySpaceMarkupStr[index].slice( emptySpaceMarkupStr[index].indexOf('line-break') + 12 ),
+						lineBreak = tempStr.slice(0, tempStr.indexOf('"')), // Line break value
+						tab       = '',
+						spaceStr  = '\n';
+
+					// Get the tab space value
+					str       = emptySpaceMarkupStr[index].indexOf('tab');
+					tempStr   = emptySpaceMarkupStr[index].slice( emptySpaceMarkupStr[index].indexOf('tab') + 5 );
+					tab       = tempStr.slice(0, tempStr.indexOf('"'));
+
+					// Append code for line break
+					if( lineBreak > 0 ) {
+						for(var i = 0; i < lineBreak; i++) {
+							spaceStr += '\n';
+						}
+					}
+
+					// Append code for tab space
+					if( tab > 0 ) {
+						for(var i = 0; i < tab; i++) {
+							spaceStr += '\t';
+						}
+					}
+
+					// Replace source with new string
+					var regex = new RegExp('\\s*<!--\\(remove-empty-space line-break="'+ lineBreak +'" tab="'+ tab +'.+\\)-->\\s*', 'g');
+					src = src.replace(regex, spaceStr);
+				}
+			}
+
 			// Write the destination file.
 			grunt.file.write(f.dest, src);
 
