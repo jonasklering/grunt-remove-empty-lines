@@ -1,7 +1,7 @@
 {
    "name": "grunt-remove-empty-lines",
    "description": "Very simple and lightweight cleaner that just removes empty lines from specific parts of any kind of files",
-   "version": "0.1.1",
+   "version": "0.2.0",
    "homepage": "https://github.com/jonasklering/grunt-remove-empty-lines",
    "author": {
       "name": "jonasklering",
